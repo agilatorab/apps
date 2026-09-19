@@ -15,6 +15,9 @@
 //               card without a store link instead of linking nowhere
 //   sync        cloud destinations the user may CHOOSE to connect; [] = none
 //   localFolder the app can write to a folder the user picks on their device
+//   icloud      the installed app can carry data between the player's own
+//               devices through Apple's iCloud — a service of their Apple
+//               Account, not ours, and worded as such
 //   encrypted   the synced document is encrypted at rest before it leaves
 //   health      the app records health information, which changes both the
 //               policy's wording and the App Store questionnaire
@@ -37,6 +40,33 @@ export const APPS = [
     health: false,
     child: false,
     extra: "Settings and the screenshots you take are kept on your device.",
+  },
+  {
+    slug: "adas-trail",
+    name: "Ada's Trail",
+    tagline: "A top-down survival scroller — build a roster, run the campaign.",
+    appStoreId: null,
+    sync: [],
+    icloud: true,
+    localFolder: false,
+    encrypted: true,
+    health: false,
+    child: false,
+    extra:
+      "Your hero roster, campaign progress and settings are kept on the device you play on.",
+  },
+  {
+    slug: "scandinavian-flick",
+    name: "Scandinavian Flick",
+    tagline: "A drift-first arcade rally game over generated low-poly stages.",
+    appStoreId: null,
+    sync: [],
+    icloud: false,
+    localFolder: false,
+    encrypted: false,
+    health: false,
+    child: false,
+    extra: "Your times, unlocks and settings are kept on the device you play on.",
   },
   {
     slug: "calendar",
@@ -90,6 +120,18 @@ export const APPS = [
     sync: ["Dropbox", "Google Drive"],
     localFolder: true,
     encrypted: false,
+    health: false,
+    child: false,
+  },
+  {
+    slug: "paint",
+    name: "Nird Paint",
+    tagline: "A sketchpad for the diagram you'd otherwise draw on a whiteboard.",
+    appStoreId: null,
+    sync: ["Dropbox", "Google Drive"],
+    icloud: false,
+    localFolder: true,
+    encrypted: true,
     health: false,
     child: false,
   },

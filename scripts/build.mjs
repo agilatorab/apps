@@ -115,6 +115,16 @@ function privacyBody(app) {
       delete it the same way you delete anything else in that account.</p>`);
   }
 
+  if (app.icloud) {
+    s.push(`<h2>Apple iCloud</h2>`);
+    s.push(`<p>Inside the installed app, what you have saved can additionally
+      be carried between your own devices through Apple's iCloud. iCloud is a
+      service of <em>your</em> Apple Account, not ours: the data goes to your
+      storage, under your Apple ID, and ${esc(PUBLISHER)} receives nothing
+      through it and cannot read it. You can turn it off for this app in the
+      device's Settings at any time.</p>`);
+  }
+
   if (app.health) {
     s.push(`<h2>Health information</h2>`);
     const subject = app.child ? "the child you are tracking" : "you";
@@ -198,6 +208,10 @@ function supportBody(app) {
   s.push(`<p><strong>Where is my data?</strong> On your device.
     ${esc(app.name)} works offline and keeps everything locally${
       syncs ? `, unless you connect your own ${esc(syncs)} account` : ""
+    }${
+      app.icloud
+        ? ", and — in the installed app — can carry it between your own devices through your Apple Account's iCloud"
+        : ""
     }. See the <a href="/${esc(app.slug)}/privacy/">privacy policy</a>.</p>`);
 
   if (syncs) {
