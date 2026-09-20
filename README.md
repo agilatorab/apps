@@ -64,13 +64,19 @@ against; a policy that claims less collection than the app performs is a
 compliance problem, not a typo. When an app gains a sync provider or starts
 recording something new, its row changes in the same release.
 
-## Going live
+## Hosting
 
-1. Enable Pages for this repository: Settings → Pages → Source **GitHub Actions**.
-2. Point DNS at it — a `CNAME` record for `apps` on `agilator.se`, at the
-   Pages host for this account. (The domain is registered with Loopia; the
-   record goes in Loopia's DNS editor.)
-3. Wait for the certificate, then tick **Enforce HTTPS**. Apple fetches the
-   privacy URL over HTTPS and a certificate that is not ready yet reads as an
-   unreachable policy.
-4. Fill in each `appStoreId` as the App Store records are created.
+The repository lives in the `agilatorab` organisation and publishes from `main`
+through the `pages` workflow, with the Pages source set to **GitHub Actions** —
+so `dist/` is built by CI and never committed.
+
+`apps.agilator.se` is a `CNAME` on `agilator.se` pointing at
+`agilatorab.github.io`. The domain is registered with Loopia and the record
+lives in Loopia's DNS editor. `agilator.se` is verified on the organisation,
+which is what keeps another GitHub account from claiming the subdomain.
+
+Pages issues the certificate, and **Enforce HTTPS** stays on: Apple fetches the
+privacy URL before review opens an app, and a policy it cannot reach over HTTPS
+is a policy that is not there.
+
+Each app's `appStoreId` is filled in as its App Store record is created.
