@@ -15,6 +15,8 @@ Pages.
 runs in CI, so an unexpected destination fails the build rather than relying on
 anyone noticing it in review.
 
+Contributors and agents: see [`AGENTS.md`](AGENTS.md).
+
 ## Layout
 
 ```
