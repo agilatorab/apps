@@ -1,3 +1,21 @@
-dist/
-.DS_Store
-PLAN.md
+# Tracked by allowlist: everything is ignored, and what belongs in the
+# repository is named below. Same shape as the link check — permitted things
+# are listed, and anything not listed does not get in by being overlooked.
+
+*
+
+!.gitignore
+!AGENTS.md
+!CNAME
+!Makefile
+!README.md
+
+!/data/
+!/data/*.js
+
+!/scripts/
+!/scripts/*.mjs
+
+!/.github/
+!/.github/workflows/
+!/.github/workflows/*.yml
