@@ -20,6 +20,10 @@ const esc = (s) =>
 const list = (xs) =>
   xs.length < 2 ? (xs[0] ?? "") : `${xs.slice(0, -1).join(", ")} and ${xs.at(-1)}`;
 
+/** The same, for alternatives: destinations are a choice of one, not a set. */
+const listOr = (xs) =>
+  xs.length < 2 ? (xs[0] ?? "") : `${xs.slice(0, -1).join(", ")} or ${xs.at(-1)}`;
+
 const CSS = `
 :root{--ink:#16242b;--dim:#5c7480;--line:#dde7eb;--paper:#fbfdfd;--card:#fff;--accent:#1b6f8a;color-scheme:light dark}
 @media (prefers-color-scheme:dark){:root{--ink:#e3edf1;--dim:#93a9b4;--line:#22343d;--paper:#0e171c;--card:#141f26;--accent:#63b6cf}}
@@ -82,11 +86,16 @@ ${body}
 
 function privacyBody(app) {
   const s = [];
-  const syncs = app.sync.length ? list(app.sync) : null;
+  const syncs = app.sync.length ? listOr(app.sync) : null;
+  const selfs = app.selfHosted?.length ? listOr(app.selfHosted) : null;
 
   s.push(`<p class="note">${esc(app.name)} keeps what you enter on your device.
     ${esc(PUBLISHER)} operates no server for it, receives none of your content,
-    and has no way to read it.</p>`);
+    and has no way to read it.${
+      app.gameCenter
+        ? " If you play signed in to Game Center, your scores go to Apple — that section is below."
+        : ""
+    }</p>`);
 
   s.push(`<h2>What the app stores, and where</h2>`);
   s.push(`<p>Everything you enter, and the settings you choose, is written to
@@ -115,6 +124,19 @@ function privacyBody(app) {
       delete it the same way you delete anything else in that account.</p>`);
   }
 
+  if (selfs) {
+    s.push(`<h2>A server you run yourself</h2>`);
+    s.push(`<p>${esc(app.name)} can also sync to ${esc(selfs)}: server software
+      you host, reached at an address you type in, with a credential you create
+      there. ${esc(PUBLISHER)} is not part of that arrangement &mdash; the app
+      talks to your server directly, and we never see the address, the
+      credential or what passes between them.${
+        app.encrypted
+          ? " The document is encrypted before it leaves your device here too."
+          : ""
+      }</p>`);
+  }
+
   if (app.icloud) {
     s.push(`<h2>Apple iCloud</h2>`);
     s.push(`<p>Inside the installed app, what you have saved can additionally
@@ -123,6 +145,28 @@ function privacyBody(app) {
       storage, under your Apple ID, and ${esc(PUBLISHER)} receives nothing
       through it and cannot read it. You can turn it off for this app in the
       device's Settings at any time.</p>`);
+  }
+
+  if (app.gameCenter) {
+    s.push(`<h2>Game Center</h2>`);
+    s.push(`<p>On Apple devices ${esc(app.name)} can use Game Center, which is
+      part of your Apple Account. While you are signed in, the game reports
+      your achievement progress and your scores to it, and reads back the
+      player name Game Center gives you.</p>`);
+    s.push(`<p>A score you post to a leaderboard is <strong>public</strong>:
+      anyone looking at that board sees the name Game Center shows for you
+      beside it. All of this goes to Apple, under Apple's own privacy policy.
+      ${esc(PUBLISHER)} receives no player identity and cannot connect a score
+      to a person. Signing out of Game Center in the device's Settings stops
+      the reporting; the game plays the same either way.</p>`);
+  }
+
+  if (app.purchases) {
+    s.push(`<h2>Purchases</h2>`);
+    s.push(`<p>${esc(app.name)} sells items inside the app, and Apple handles
+      every purchase: you pay Apple, Apple tells the app what you now own, and
+      no payment detail reaches the app or ${esc(PUBLISHER)}. What we see is the
+      aggregate sales figure App Store Connect reports, which names nobody.</p>`);
   }
 
   if (app.health) {
@@ -152,7 +196,6 @@ function privacyBody(app) {
 
   s.push(`<h2>What the app does not do</h2>`);
   s.push(`<ul>
-    <li>No account, no sign-up, no email address required.</li>
     <li>No analytics, telemetry, crash reporting or usage tracking.</li>
     <li>No advertising, no advertising identifiers, no third-party ad SDKs.</li>
     <li>No selling or sharing of your information &mdash; there is nothing to
@@ -195,7 +238,8 @@ function privacyBody(app) {
 
 function supportBody(app) {
   const s = [];
-  const syncs = app.sync.length ? list(app.sync) : null;
+  const syncs = app.sync.length ? listOr(app.sync) : null;
+  const selfs = app.selfHosted?.length ? listOr(app.selfHosted) : null;
 
   s.push(`<p>${esc(app.tagline)}</p>`);
 
@@ -208,7 +252,7 @@ function supportBody(app) {
   s.push(`<p><strong>Where is my data?</strong> On your device.
     ${esc(app.name)} works offline and keeps everything locally${
       syncs ? `, unless you connect your own ${esc(syncs)} account` : ""
-    }${
+    }${selfs ? `, or point it at a ${esc(selfs)} server you run yourself` : ""}${
       app.icloud
         ? ", and — in the installed app — can carry it between your own devices through your Apple Account's iCloud"
         : ""
@@ -227,6 +271,20 @@ function supportBody(app) {
         ? " Anything already written to your own cloud account is deleted there, by you, like any other file."
         : ""
     }</p>`);
+
+  if (app.gameCenter) {
+    s.push(`<p><strong>Do I have to use Game Center?</strong> No. Signed out,
+      the game plays exactly the same and reports nothing. Signed in, your
+      scores go to Apple's leaderboards, where they are public under the player
+      name Game Center shows for you.</p>`);
+  }
+
+  if (app.purchases) {
+    s.push(`<p><strong>A purchase did not arrive.</strong> Purchases are
+      Apple's: reinstalling and using Restore Purchases recovers anything you
+      have bought. If it stays missing, write to us with the date &mdash;
+      refunds themselves are requested from Apple, not from us.</p>`);
+  }
 
   if (app.health) {
     s.push(`<p><strong>Is this a medical device?</strong> No. ${esc(app.name)}

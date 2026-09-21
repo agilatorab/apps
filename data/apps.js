@@ -19,6 +19,12 @@
 //               devices through Apple's iCloud — a service of their Apple
 //               Account, not ours, and worded as such
 //   encrypted   the synced document is encrypted at rest before it leaves
+//   selfHosted  server software the user runs themselves and points the app
+//               at — a different fact from `sync`, which is an account with a
+//               provider, and worded as the arrangement it is
+//   gameCenter  the app talks to Apple's Game Center: the signed-in player,
+//               achievements, and scores that a public board then shows
+//   purchases   the app sells something inside itself, through Apple
 //   health      the app records health information, which changes both the
 //               policy's wording and the App Store questionnaire
 //   child       the health data is about a child rather than the user
@@ -49,7 +55,9 @@ export const APPS = [
     sync: [],
     icloud: true,
     localFolder: false,
-    encrypted: true,
+    encrypted: false,
+    gameCenter: true,
+    purchases: true,
     health: false,
     child: false,
     extra:
@@ -85,6 +93,7 @@ export const APPS = [
     tagline: "A quiet checklist. Add items, check them off, swipe to archive.",
     appStoreId: null,
     sync: ["Dropbox", "Google Drive"],
+    icloud: true,
     localFolder: true,
     encrypted: true,
     health: false,
@@ -96,6 +105,7 @@ export const APPS = [
     tagline: "Notes that stay on your device unless you say otherwise.",
     appStoreId: null,
     sync: ["Dropbox", "Google Drive"],
+    selfHosted: ["Nextcloud"],
     localFolder: true,
     encrypted: true,
     health: false,

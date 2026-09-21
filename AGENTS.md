@@ -52,6 +52,9 @@ generated from the row's fields, so the policies cannot drift apart:
 | `sync` | cloud destinations the user may choose to connect; `[]` for none |
 | `icloud` | the installed app can carry data between the user's own devices through their Apple Account |
 | `localFolder` | the app can write to a folder the user picks |
+| `selfHosted` | server software the user runs and points the app at — not an account with a provider |
+| `gameCenter` | the app talks to Apple's Game Center: player, achievements, and scores a public board shows |
+| `purchases` | the app sells something inside itself, through Apple |
 | `encrypted` | the synced document is encrypted before it leaves the device |
 | `health` | records health information — adds the sensitive-data and not-a-medical-device sections |
 | `child` | that health data is about a child — adds the children's-data section |
