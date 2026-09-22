@@ -8,8 +8,8 @@ Pages.
 
 ## The one rule
 
-**A page here links to the App Store, to this site, or to our contact address
-— and to nothing else.**
+**A page here links to the App Store, to this site, to the company site it
+belongs to (agilator.se), or to our contact address — and to nothing else.**
 
 `scripts/check.mjs` enforces that as an allowlist over the generated output and
 runs in CI, so an unexpected destination fails the build rather than relying on
@@ -21,8 +21,10 @@ Contributors and agents: see [`AGENTS.md`](AGENTS.md).
 
 ```
 data/apps.js        every app, as one row each — the source of truth
+data/brand.js       the mark and palette, imported from agilatorab/web
 scripts/build.mjs   generates dist/
 scripts/check.mjs   fails if a page links somewhere it must not
+scripts/import-brand.mjs  regenerates data/brand.js from a web checkout
 CNAME               apps.agilator.se
 ```
 
