@@ -16,8 +16,8 @@ into a tracked file, a commit message or a generated page.
 
 ## The one rule
 
-**A generated page links to the App Store, to this site, or to our contact
-address — and to nothing else.**
+**A generated page links to the App Store, to this site, to the company site
+it belongs to (agilator.se), or to our contact address — and to nothing else.**
 
 `scripts/check.mjs` enforces this as an allowlist over `dist/` and runs in CI
 before publishing, so an unexpected destination fails the build. If a change
@@ -28,8 +28,10 @@ entry to add quietly.
 
 ```
 data/apps.js        every app as one row — the source of truth
+data/brand.js       the mark and palette, imported from agilatorab/web
 scripts/build.mjs   generates dist/
 scripts/check.mjs   the link allowlist
+scripts/import-brand.mjs  regenerates data/brand.js from a checkout of agilatorab/web
 .github/workflows/pages.yml
 CNAME               apps.agilator.se
 ```
@@ -37,6 +39,13 @@ CNAME               apps.agilator.se
 Output is `dist/index.html` plus `dist/<slug>/privacy/` and
 `dist/<slug>/support/` per app. `dist/` is build product — gitignored, never
 edited by hand.
+
+## The look
+
+The palette and the mark come from the company site, [agilatorab/web](https://github.com/agilatorab/web),
+so the two read as one company. `data/brand.js` is generated from that
+checkout — `node scripts/import-brand.mjs ../web` — and never edited by hand.
+When the brand changes there, regenerate it here in the same sitting.
 
 ## Changing an app
 

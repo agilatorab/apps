@@ -9,6 +9,7 @@ import { existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { APPS, CONTACT, PUBLISHER, SITE, EFFECTIVE } from "../data/apps.js";
+import { COMPANY_SITE, MARK_SVG, PALETTE } from "../data/brand.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = join(ROOT, "dist");
@@ -24,34 +25,52 @@ const list = (xs) =>
 const listOr = (xs) =>
   xs.length < 2 ? (xs[0] ?? "") : `${xs.slice(0, -1).join(", ")} or ${xs.at(-1)}`;
 
+// The look is the company site's (agilatorab/web): the same paper, ink and
+// alligator-green accent, the same wide-tracked caps kicker, the same soft
+// cards — so a person arriving from agilator.se sees one company, not two.
+const tokens = (t) =>
+  `--paper:${t.paper};--card:${t.card};--ink:${t.ink};--dim:${t.dim};--line:${t.line};--accent:${t.accent};--iris:${t.iris}`;
+
 const CSS = `
-:root{--ink:#16242b;--dim:#5c7480;--line:#dde7eb;--paper:#fbfdfd;--card:#fff;--accent:#1b6f8a;color-scheme:light dark}
-@media (prefers-color-scheme:dark){:root{--ink:#e3edf1;--dim:#93a9b4;--line:#22343d;--paper:#0e171c;--card:#141f26;--accent:#63b6cf}}
+:root{${tokens(PALETTE.light)};color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root{${tokens(PALETTE.dark)}}}
 *{box-sizing:border-box}
+html{background:var(--paper)}
 body{margin:0;background:var(--paper);color:var(--ink);
   font:16px/1.65 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   -webkit-text-size-adjust:100%}
-.wrap{max-width:46rem;margin:0 auto;padding:3rem 1.25rem 5rem}
+.wrap{max-width:46rem;margin:0 auto;padding:1.25rem 1.25rem 4rem}
+nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.25rem 0 2.5rem}
+nav a.brand{display:inline-flex;align-items:center;gap:.75rem;color:var(--ink);text-decoration:none}
+nav a.brand:hover .mark,nav a.brand:focus-visible .mark{--logo-iris:var(--accent)}
+.mark{height:1.25rem;width:auto;--logo-iris:var(--iris)}
+.mark path{transition:fill .4s ease}
+nav .links a{color:var(--dim);text-decoration:none;font-size:.9rem;font-weight:500;margin-left:1rem}
+nav .links a:hover{color:var(--ink)}
 header{border-bottom:1px solid var(--line);padding-bottom:1.25rem;margin-bottom:2rem}
-.kicker{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 .4rem}
-h1{font-size:1.9rem;line-height:1.2;margin:0 0 .35rem;letter-spacing:-.01em}
+.kicker{font-size:.75rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin:0 0 .5rem}
+h1{font-size:2rem;line-height:1.15;margin:0 0 .4rem;letter-spacing:-.02em;font-weight:600}
 h2{font-size:1.06rem;margin:2.4rem 0 .6rem;letter-spacing:-.005em}
 p{margin:0 0 1rem}
 ul{margin:0 0 1rem;padding-left:1.15rem}
 li{margin:.3rem 0}
 a{color:var(--accent)}
-.lede{font-size:1.05rem;color:var(--dim);margin:0}
+.lede{font-size:1.1rem;color:var(--dim);margin:0}
 .note{border-left:3px solid var(--accent);padding:.1rem 0 .1rem 1rem;margin:1.5rem 0;color:var(--dim)}
 footer{margin-top:3.5rem;padding-top:1.25rem;border-top:1px solid var(--line);
   color:var(--dim);font-size:.87rem}
 footer a{color:var(--dim)}
+footer .row{display:flex;flex-wrap:wrap;gap:.4rem 1.25rem;justify-content:space-between;align-items:baseline}
+footer .row p{margin:0}
 .grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));margin:2rem 0 0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1.05rem 1.15rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.15rem 1.25rem;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
 .card h3{margin:0 0 .3rem;font-size:1rem}
 .card p{margin:0 0 .7rem;color:var(--dim);font-size:.9rem;line-height:1.5}
 .links{font-size:.83rem;color:var(--dim)}
 .links a{margin-right:.8rem}
 .soon{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-right:.8rem}
+@media (prefers-reduced-motion:reduce){.mark path,.card{transition:none}}
 `.trim();
 
 function page({ title, kicker, heading, lede, body, crumb }) {
@@ -60,11 +79,17 @@ function page({ title, kicker, heading, lede, body, crumb }) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="${PALETTE.light.paper}">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="${PALETTE.dark.paper}">
 <title>${esc(title)}</title>
 <style>${CSS}</style>
 </head>
 <body>
 <div class="wrap">
+<nav aria-label="Primary">
+<a class="brand" href="${COMPANY_SITE}" aria-label="${esc(PUBLISHER)}">${MARK_SVG}</a>
+<span class="links"><a href="/">All apps</a><a href="mailto:${esc(CONTACT)}">Contact</a></span>
+</nav>
 <header>
 ${kicker ? `<p class="kicker">${esc(kicker)}</p>` : ""}
 <h1>${esc(heading)}</h1>
@@ -72,9 +97,13 @@ ${lede ? `<p class="lede">${esc(lede)}</p>` : ""}
 </header>
 ${body}
 <footer>
-<p>${esc(PUBLISHER)} &middot; <a href="mailto:${esc(CONTACT)}">${esc(CONTACT)}</a>${
+<div class="row">
+<p>&copy; ${EFFECTIVE.slice(0, 4)} ${esc(PUBLISHER)} &middot; Sweden &middot; <a href="${COMPANY_SITE}">agilator.se</a></p>
+<p><a href="mailto:${esc(CONTACT)}">${esc(CONTACT)}</a>${
     crumb ? ` &middot; <a href="/">All apps</a>` : ""
   }</p>
+</div>
+<p style="margin:.75rem 0 0">This site sets no cookies and loads nothing from third parties.</p>
 </footer>
 </div>
 </body>
@@ -339,8 +368,8 @@ async function main() {
     page({
       title: `${PUBLISHER} — Apps`,
       kicker: PUBLISHER,
-      heading: "Apps",
-      lede: "Local-first tools for iPhone and iPad.",
+      heading: "Apps and games",
+      lede: "Local-first tools and small games, made in Sweden.",
       body: indexBody(),
     }),
   );
