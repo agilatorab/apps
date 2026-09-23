@@ -16,13 +16,19 @@ private companion repository this one ignores. If `ops/` is missing, clone it:
 git clone git@github.com:agilatorab/apps-ops.git ops
 ```
 
-Read `ops/CHECKLIST.md` before anything else: the registry of apps with their
-status, where each app's checkout is, and the helper scripts in
-`ops/adoption/` that do the mechanical parts. Keep it (and `ops/PLAN.md`)
-current as you work, committing and pushing in `ops/`; never copy their
-contents into a tracked file here, a commit message or a generated page. If
-the clone fails for want of access, carry on from the standard below and say
-so in the report.
+Then:
+
+- **Where things stand** — `python3.12 ops/registry.py status` for every app,
+  `python3.12 ops/registry.py status <slug>` for one: what is done, what is
+  left for an agent, what waits on the owner, and the latest comment. Start
+  from that, not from memory.
+- **The detail** — `ops/CHECKLIST.md`: how to verify each part, where each
+  app's checkout is, and the helper scripts in `ops/adoption/` that do the
+  mechanical work.
+
+Commit and push in `ops/`; never copy its contents into a tracked file here, a
+commit message or a generated page. If the clone fails for want of access,
+carry on from the standard below and say so in the report.
 
 ## How to work
 
@@ -35,6 +41,12 @@ so in the report.
 5. **Before pushing**, scan the diff and the message for local paths and for
    anything the local notes say must stay local.
 6. **After pushing**, confirm CI on that commit.
+7. **Record it in the registry** before finishing: `registry.py set` each part
+   you verified (a part is `done` only when checked, never because it was
+   probably done earlier), and `registry.py comment <slug> "…" --by "<who>"` —
+   **one** comment of at most 500 characters that replaces the last one: the
+   status in a sentence and the next step. A new app starts with
+   `registry.py add`. Run `registry.py check`, then commit and push `ops/`.
 
 ## The standard
 
@@ -125,5 +137,6 @@ outstanding; do not attempt any of it.
 
 ## Report
 
-Per app: what was verified, what was fixed (with commit SHAs), what is
+Keep the registry and the report in step — the comment you wrote is the
+report's summary for that app. Per app: what was verified, what was fixed (with commit SHAs), what is
 outstanding and for whom, and anything that has never been run end to end.
