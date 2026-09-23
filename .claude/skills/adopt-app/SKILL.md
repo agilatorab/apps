@@ -20,7 +20,7 @@ Then:
 
 - **Where things stand** — `python3.12 ops/registry.py status` for every app,
   `python3.12 ops/registry.py status <slug>` for one: what is done, what is
-  left for an agent, what waits on the owner, and the latest comment. Start
+  left for an agent, what waits on the owner, and the latest status and next step. Start
   from that, not from memory.
 - **The detail** — `ops/CHECKLIST.md`: how to verify each part, where each
   app's checkout is, and the helper scripts in `ops/adoption/` that do the
@@ -43,9 +43,9 @@ carry on from the standard below and say so in the report.
 6. **After pushing**, confirm CI on that commit.
 7. **Record it in the registry** before finishing: `registry.py set` each part
    you verified (a part is `done` only when checked, never because it was
-   probably done earlier), and `registry.py comment <slug> "…" --by "<who>"` —
-   **one** comment of at most 500 characters that replaces the last one: the
-   status in a sentence and the next step. A new app starts with
+   probably done earlier), and `registry.py comment <slug> --status "…" --next "…" --by "<who>"` —
+   **one** comment that replaces the last one, in two halves of at most 300
+   characters each: where the app stands, and the next step and whose it is. A new app starts with
    `registry.py add`. Run `registry.py check`, then commit and push `ops/`.
 
 ## The standard
