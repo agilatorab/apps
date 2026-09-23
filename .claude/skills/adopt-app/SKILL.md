@@ -9,11 +9,20 @@ Every app and game listed on this site ships the same way. This skill is the
 definition of "finished" and the order to get there in. It verifies first and
 fixes second: nothing is ticked because it was probably done.
 
-If a `CHECKLIST.md` is present in this repository's working copy, read it
-before anything else. It is local working notes — the registry of apps with
-their status, where each app's checkout is, and the helper scripts that do the
-mechanical parts. Keep it current as you work; never commit it, and never copy
-its contents into a tracked file, a commit message or a generated page.
+Start with the working notes in `ops/` at the root of this working copy — a
+private companion repository this one ignores. If `ops/` is missing, clone it:
+
+```sh
+git clone git@github.com:agilatorab/apps-ops.git ops
+```
+
+Read `ops/CHECKLIST.md` before anything else: the registry of apps with their
+status, where each app's checkout is, and the helper scripts in
+`ops/adoption/` that do the mechanical parts. Keep it (and `ops/PLAN.md`)
+current as you work, committing and pushing in `ops/`; never copy their
+contents into a tracked file here, a commit message or a generated page. If
+the clone fails for want of access, carry on from the standard below and say
+so in the report.
 
 ## How to work
 

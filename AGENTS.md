@@ -9,15 +9,14 @@ the whole build.
 
 ## Local working notes
 
-**`PLAN.md` is untracked and may be present in a working copy.** It carries the
-rollout plan and per-app status. Read it if it is there, and keep it current as
-work lands — but it is local only: never commit it, and never copy its contents
-into a tracked file, a commit message or a generated page.
-
-**`CHECKLIST.md` is the same kind of file** — the definition of "finished" for
-an app or a game, with the registry of apps and their status. It is what the
-`adopt-app` skill (`.claude/skills/adopt-app/`) reads first when it is
-present; the skill itself carries the standard. Same rules: local only.
+**The working notes live in a private companion repository**, cloned into
+this working copy as `ops/` (ignored here): `ops/PLAN.md` carries the rollout
+plan and per-app status, `ops/CHECKLIST.md` the definition of "finished" for
+an app or a game, with the registry of apps. Read them when they are there and
+keep them current as work lands, committing in `ops/` — never copy their
+contents into a tracked file here, a commit message or a generated page. The
+`adopt-app` skill (`.claude/skills/adopt-app/`) says how to clone `ops/` when
+it is missing.
 
 ## Adding an app
 
