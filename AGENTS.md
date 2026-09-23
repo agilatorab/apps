@@ -14,6 +14,18 @@ rollout plan and per-app status. Read it if it is there, and keep it current as
 work lands — but it is local only: never commit it, and never copy its contents
 into a tracked file, a commit message or a generated page.
 
+**`CHECKLIST.md` is the same kind of file** — the definition of "finished" for
+an app or a game, with the registry of apps and their status. It is what the
+`adopt-app` skill (`.claude/skills/adopt-app/`) reads first when it is
+present; the skill itself carries the standard. Same rules: local only.
+
+## Adding an app
+
+Load the `adopt-app` skill. It walks an app from its repository to ready for
+submission — phone wrapper, desktop build, identity from the deployment,
+storage, store listing — and ends at this repo: a new row in `data/apps.js`,
+true in every field, then `make check`.
+
 ## The one rule
 
 **A generated page links to the App Store, to this site, to the company site
@@ -28,6 +40,7 @@ entry to add quietly.
 
 ```
 data/apps.js        every app as one row — the source of truth
+.claude/skills/adopt-app/  what "finished" means for an app, and how to get there
 data/brand.js       the mark and palette, imported from agilatorab/web
 scripts/build.mjs   generates dist/
 scripts/check.mjs   the link allowlist
