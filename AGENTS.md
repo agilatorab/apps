@@ -18,6 +18,13 @@ contents into a tracked file here, a commit message or a generated page. The
 `adopt-app` skill (`.claude/skills/adopt-app/`) says how to clone `ops/` when
 it is missing.
 
+## Store fronts
+
+An app's store front — screenshots, listing copy, the upload — is made with the
+`store-harness` skill in the private companion repository
+(`ops/.claude/skills/store-harness/SKILL.md`). Load it when asked for
+screenshots, a listing or demo data.
+
 ## Adding an app
 
 Load the `adopt-app` skill. It walks an app from its repository to ready for
