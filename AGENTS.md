@@ -23,7 +23,9 @@ Start from `ops/README.md`, and load a skill by reading
 `ops/.claude/skills/<name>/SKILL.md`. Adding an app is `adopt-app`, and it
 touches this repository only at the end: a new row in `data/apps.js`, true in
 every field, then `make check`. A store front — screenshots, listing copy, the
-upload — is `store-harness`.
+upload — is `store-harness`. A session that loads a skill reads its lessons
+first and reflects what it learned back into it before committing — the
+`skill-reflection` skill.
 
 Keep the notes current as work lands, committing in `ops/` — never copy their
 contents into a tracked file here, a commit message or a generated page.
