@@ -7,30 +7,26 @@ Static HTML from a dependency-free Node generator, published to GitHub Pages.
 There is no framework, no bundler and no lockfile; `node scripts/build.mjs` is
 the whole build.
 
-## Local working notes
+## Everything else is in ops/
 
-**The working notes live in a private companion repository**, cloned into
-this working copy as `ops/` (ignored here): `ops/PLAN.md` carries the rollout
-plan and per-app status, `ops/CHECKLIST.md` the definition of "finished" for
-an app or a game, with the registry of apps. Read them when they are there and
-keep them current as work lands, committing in `ops/` — never copy their
-contents into a tracked file here, a commit message or a generated page. The
-`adopt-app` skill (`.claude/skills/adopt-app/`) says how to clone `ops/` when
-it is missing.
+This repository holds only what builds and deploys the site. Everything about
+the apps themselves — the working notes, the definition of "finished", the
+registry, the porting and store scripts, and the skills (`adopt-app`,
+`store-harness`, `fleet-toolchain`) — lives in a private companion repository,
+cloned into this working copy as `ops/` (ignored here):
 
-## Store fronts
+```sh
+git clone git@github.com:agilatorab/apps-ops.git ops
+```
 
-An app's store front — screenshots, listing copy, the upload — is made with the
-`store-harness` skill in the private companion repository
-(`ops/.claude/skills/store-harness/SKILL.md`). Load it when asked for
-screenshots, a listing or demo data.
+Start from `ops/README.md`, and load a skill by reading
+`ops/.claude/skills/<name>/SKILL.md`. Adding an app is `adopt-app`, and it
+touches this repository only at the end: a new row in `data/apps.js`, true in
+every field, then `make check`. A store front — screenshots, listing copy, the
+upload — is `store-harness`.
 
-## Adding an app
-
-Load the `adopt-app` skill. It walks an app from its repository to ready for
-submission — phone wrapper, desktop build, identity from the deployment,
-storage, store listing — and ends at this repo: a new row in `data/apps.js`,
-true in every field, then `make check`.
+Keep the notes current as work lands, committing in `ops/` — never copy their
+contents into a tracked file here, a commit message or a generated page.
 
 ## The one rule
 
@@ -46,7 +42,6 @@ entry to add quietly.
 
 ```
 data/apps.js        every app as one row — the source of truth
-.claude/skills/adopt-app/  what "finished" means for an app, and how to get there
 data/brand.js       the mark and palette, imported from agilatorab/web
 scripts/build.mjs   generates dist/
 scripts/check.mjs   the link allowlist

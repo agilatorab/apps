@@ -19,8 +19,3 @@
 !/.github/
 !/.github/workflows/
 !/.github/workflows/*.yml
-
-!/.claude/
-!/.claude/skills/
-!/.claude/skills/*/
-!/.claude/skills/*/SKILL.md
