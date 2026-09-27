@@ -30,6 +30,22 @@ first and reflects what it learned back into it before committing — the
 Keep the notes current as work lands, committing in `ops/` — never copy their
 contents into a tracked file here, a commit message or a generated page.
 
+## Working on an app checkout
+
+Several sessions and their agents work the fleet at once, often in the same
+app. So a change to an app's code goes in a **git worktree off `origin/main`**
+(`git -C <app> worktree add <scratch>/<app> origin/main`), never in the shared
+checkout — someone else's uncommitted work is likely there.
+
+- Install for real in the worktree (`npm ci`, and in `native/` if needed).
+  Never symlink `node_modules` from the shared checkout: an install or a
+  build cache would write through the link into another session's tree.
+- Give every agent its own scratch directory — scripts, logs,
+  `-derivedDataPath` — and wait for a running `xcodebuild` to finish.
+- Before pushing, `git fetch` and rebase onto `origin/main`; commit only
+  your own files. Remove the worktree when done.
+- Running a command in the shared checkout is fine only to read it.
+
 ## The one rule
 
 **A generated page links to the App Store, to this site, to the company site
