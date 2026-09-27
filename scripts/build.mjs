@@ -66,6 +66,8 @@ footer .row p{margin:0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1.15rem 1.25rem;transition:border-color .2s}
 .card:hover{border-color:var(--accent)}
 .card h3{margin:0 0 .3rem;font-size:1rem}
+.card h3 a{color:inherit;text-decoration:none}
+.card h3 a:hover{color:var(--accent)}
 .card p{margin:0 0 .7rem;color:var(--dim);font-size:.9rem;line-height:1.5}
 .links{font-size:.83rem;color:var(--dim)}
 .links a{margin-right:.8rem}
@@ -176,6 +178,18 @@ function privacyBody(app) {
       device's Settings at any time.</p>`);
   }
 
+  if (app.contacts) {
+    s.push(`<h2>Your contacts</h2>`);
+    s.push(`<p>If you allow it when the installed app asks, ${esc(app.name)}
+      reads the contacts on your device &mdash; each one's name and birthday,
+      and nothing else &mdash; to show them inside the app. They are held in
+      memory while the app is open and are not stored, synced or backed up.
+      The one thing the app writes down is which contacts you chose, on that
+      device alone. Nothing about a contact is sent to ${esc(PUBLISHER)} or
+      anyone else. You can withdraw access in the device's Settings at any
+      time.</p>`);
+  }
+
   if (app.gameCenter) {
     s.push(`<h2>Game Center</h2>`);
     s.push(`<p>On Apple devices ${esc(app.name)} can use Game Center, which is
@@ -263,12 +277,33 @@ function privacyBody(app) {
   return s.join("\n");
 }
 
+/* ----------------------------------------------------------------- shared */
+
+/** Where the app keeps what you enter — one sentence, said the same way on
+ *  the app's page and in its support answers. */
+function keptWhere(app) {
+  const syncs = app.sync.length ? listOr(app.sync) : null;
+  const selfs = app.selfHosted?.length ? listOr(app.selfHosted) : null;
+  return `${esc(app.name)} works offline and keeps everything locally${
+    syncs ? `, unless you connect your own ${esc(syncs)} account` : ""
+  }${selfs ? `, or point it at a ${esc(selfs)} server you run yourself` : ""}${
+    app.icloud
+      ? ", and — in the installed app — can carry it between your own devices through your Apple Account's iCloud"
+      : ""
+  }.`;
+}
+
+/** The store link once the listing exists, and an honest "coming soon" until. */
+const storeLink = (app) =>
+  app.appStoreId
+    ? `<a href="https://apps.apple.com/app/id${esc(app.appStoreId)}">App Store</a>`
+    : `<span class="soon">Coming soon</span>`;
+
 /* ---------------------------------------------------------------- support */
 
 function supportBody(app) {
   const s = [];
   const syncs = app.sync.length ? listOr(app.sync) : null;
-  const selfs = app.selfHosted?.length ? listOr(app.selfHosted) : null;
 
   s.push(`<p>${esc(app.tagline)}</p>`);
 
@@ -279,13 +314,7 @@ function supportBody(app) {
 
   s.push(`<h2>Common questions</h2>`);
   s.push(`<p><strong>Where is my data?</strong> On your device.
-    ${esc(app.name)} works offline and keeps everything locally${
-      syncs ? `, unless you connect your own ${esc(syncs)} account` : ""
-    }${selfs ? `, or point it at a ${esc(selfs)} server you run yourself` : ""}${
-      app.icloud
-        ? ", and — in the installed app — can carry it between your own devices through your Apple Account's iCloud"
-        : ""
-    }. See the <a href="/${esc(app.slug)}/privacy/">privacy policy</a>.</p>`);
+    ${keptWhere(app)} See the <a href="/${esc(app.slug)}/privacy/">privacy policy</a>.</p>`);
 
   if (syncs) {
     s.push(`<p><strong>Sync isn't working.</strong> Check that the device is
@@ -300,6 +329,13 @@ function supportBody(app) {
         ? " Anything already written to your own cloud account is deleted there, by you, like any other file."
         : ""
     }</p>`);
+
+  if (app.contacts) {
+    s.push(`<p><strong>Does it need my contacts?</strong> No. Reading them
+      is optional, and everything else in the app works without it. If you
+      allowed it and change your mind, turn contacts off for
+      ${esc(app.name)} in the device's Settings.</p>`);
+  }
 
   if (app.gameCenter) {
     s.push(`<p><strong>Do I have to use Game Center?</strong> No. Signed out,
@@ -329,18 +365,27 @@ function supportBody(app) {
   return s.join("\n");
 }
 
+/* -------------------------------------------------------------------- app */
+
+// The app's own page, and the marketing URL its App Store listing carries: a
+// paid listing points here rather than at a free web edition. It says only
+// what the row says, so it cannot promise more than the privacy policy does.
+function appBody(app) {
+  return `<p class="links">${storeLink(app)}<a href="/${esc(app.slug)}/privacy/">Privacy</a><a href="/${esc(app.slug)}/support/">Support</a></p>
+<h2>Your data</h2>
+<p>${keptWhere(app)}</p>
+<p>No analytics, no tracking, no advertising. ${esc(PUBLISHER)} runs no server
+for it and never receives what you enter.</p>`;
+}
+
 /* ------------------------------------------------------------------ index */
 
 function indexBody() {
   const cards = APPS.map(
     (a) => `<div class="card">
-  <h3>${esc(a.name)}</h3>
+  <h3><a href="/${esc(a.slug)}/">${esc(a.name)}</a></h3>
   <p>${esc(a.tagline)}</p>
-  <p class="links">${
-    a.appStoreId
-      ? `<a href="https://apps.apple.com/app/id${esc(a.appStoreId)}">App Store</a>`
-      : `<span class="soon">Coming soon</span>`
-  }<a href="/${esc(a.slug)}/privacy/">Privacy</a><a href="/${esc(a.slug)}/support/">Support</a></p>
+  <p class="links">${storeLink(a)}<a href="/${esc(a.slug)}/privacy/">Privacy</a><a href="/${esc(a.slug)}/support/">Support</a></p>
 </div>`,
   ).join("\n");
 
@@ -376,6 +421,17 @@ async function main() {
 
   for (const app of APPS) {
     await write(
+      join(DIST, app.slug, "index.html"),
+      page({
+        title: `${app.name} — ${PUBLISHER}`,
+        kicker: PUBLISHER,
+        heading: app.name,
+        lede: app.tagline,
+        body: appBody(app),
+        crumb: true,
+      }),
+    );
+    await write(
       join(DIST, app.slug, "privacy", "index.html"),
       page({
         title: `Privacy Policy — ${app.name}`,
@@ -406,7 +462,7 @@ async function main() {
   }
   await writeFile(join(DIST, ".nojekyll"), "", "utf8");
 
-  console.log(`built ${APPS.length * 2 + 1} pages for ${APPS.length} apps → dist/`);
+  console.log(`built ${APPS.length * 3 + 1} pages for ${APPS.length} apps → dist/`);
   console.log(`  https://${SITE}/`);
 }
 

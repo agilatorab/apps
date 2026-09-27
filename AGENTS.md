@@ -52,8 +52,9 @@ scripts/import-brand.mjs  regenerates data/brand.js from a checkout of agilatora
 CNAME               apps.agilator.se
 ```
 
-Output is `dist/index.html` plus `dist/<slug>/privacy/` and
-`dist/<slug>/support/` per app. `dist/` is build product — gitignored, never
+Output is `dist/index.html` plus `dist/<slug>/` (the app's page, and its
+listing's marketing URL), `dist/<slug>/privacy/` and `dist/<slug>/support/`
+per app. `dist/` is build product — gitignored, never
 edited by hand.
 
 ## The look
@@ -80,6 +81,7 @@ generated from the row's fields, so the policies cannot drift apart:
 | `selfHosted` | server software the user runs and points the app at — not an account with a provider |
 | `gameCenter` | the app talks to Apple's Game Center: player, achievements, and scores a public board shows |
 | `purchases` | the app sells something inside itself, through Apple |
+| `contacts` | the installed app reads names and birthdays from the device's address book, once allowed |
 | `encrypted` | the synced document is encrypted before it leaves the device |
 | `health` | records health information — adds the sensitive-data and not-a-medical-device sections |
 | `child` | that health data is about a child — adds the children's-data section |

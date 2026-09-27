@@ -25,6 +25,10 @@
 //   gameCenter  the app talks to Apple's Game Center: the signed-in player,
 //               achievements, and scores that a public board then shows
 //   purchases   the app sells something inside itself, through Apple
+//   contacts    the installed app reads names and birthdays from the device's
+//               address book, once the user allows it — held in memory only;
+//               what it writes down is which contacts were chosen, on that
+//               device alone
 //   health      the app records health information, which changes both the
 //               policy's wording and the App Store questionnaire
 //   child       the health data is about a child rather than the user
@@ -83,6 +87,7 @@ export const APPS = [
     appStoreId: null,
     sync: ["Dropbox"],
     localFolder: true,
+    contacts: true,
     encrypted: false,
     health: false,
     child: false,
