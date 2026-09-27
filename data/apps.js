@@ -36,7 +36,7 @@
 export const CONTACT = "support@agilator.se";
 export const PUBLISHER = "Agilator AB";
 export const SITE = "apps.agilator.se";
-export const EFFECTIVE = "2026-09-19";
+export const EFFECTIVE = "2026-09-27";
 
 export const APPS = [
   {
