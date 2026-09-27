@@ -181,7 +181,7 @@ export const APPS = [
   {
     slug: "baby",
     name: "Nird Baby",
-    tagline: "Follow one child's feeding, sleep and growth from birth.",
+    tagline: "Growth, diapers, food and vaccinations for one child, from birth.",
     appStoreId: null,
     sync: ["Dropbox"],
     localFolder: true,
