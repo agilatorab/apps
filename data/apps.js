@@ -81,6 +81,32 @@ export const APPS = [
     extra: "Your times, unlocks and settings are kept on the device you play on.",
   },
   {
+    slug: "fall-line",
+    name: "Fall Line",
+    tagline: "A downhill skiing game on generated mountains — race the gates or ride free.",
+    appStoreId: null,
+    sync: [],
+    localFolder: false,
+    encrypted: false,
+    health: false,
+    child: false,
+    extra:
+      "Your records, ghosts, statistics, settings and the screenshots you take are kept on the device you play on.",
+  },
+  {
+    slug: "powder-run",
+    name: "Powder Run",
+    tagline: "A snowmobile racing game over generated snowy hills and deep powder.",
+    appStoreId: null,
+    sync: [],
+    localFolder: false,
+    encrypted: false,
+    health: false,
+    child: false,
+    extra:
+      "Your records, ghosts, campaign progress, settings and the screenshots you take are kept on the device you play on.",
+  },
+  {
     slug: "calendar",
     name: "Nird Calendar",
     tagline: "A wall calendar that doesn't nag you — week numbers, red Sundays, short notes.",
